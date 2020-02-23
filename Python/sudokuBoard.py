@@ -93,7 +93,7 @@ class sudokuBoard:
             return False
 
         # check the coordinate is valid
-        if(((0 <= number <= 8) & (0 <= number <= 8)) == False):
+        if(((0 <= x <= 8) & (0 <= y <= 8)) == False):
             print("Invalid x or y coordinate")
             return False
 
@@ -105,6 +105,7 @@ class sudokuBoard:
 
             # Insert the value into the grid
             self.board[y][x] = number
+            print("valid move")
             return True
         else:
             print("invalid move")
@@ -181,38 +182,57 @@ class sudokuBoard:
 
         return False    # indicate that there are no moves in the history
 
+    def solve(self):
+        """
+        This method implements a sudoku solver using recursion
+        """
+
+        for y in range(9):
+            for x in range(9):
+                if self.board[y][x] == 0:
+                    for n in range(1, 10):
+                        if self.insertNumber(x, y, n):
+                            if self.solve():
+                                return True
+                            self.insertNumber(x, y, 0)
+                    return False
+        return True
+
 
 if __name__ == "__main__":
 
-    # # Load board from list example
-    # myBoard = [[0, 8, 0, 0, 0, 0, 2, 0, 0],
-    #            [0, 0, 0, 0, 8, 4, 0, 9, 0],
-    #            [0, 0, 6, 3, 2, 0, 0, 1, 0],
-    #            [0, 9, 7, 0, 0, 0, 0, 8, 0],
-    #            [8, 0, 0, 9, 0, 3, 0, 0, 2],
-    #            [0, 1, 0, 0, 0, 0, 9, 5, 0],
-    #            [0, 7, 0, 0, 4, 5, 8, 0, 0],
-    #            [0, 3, 0, 7, 1, 0, 0, 0, 0],
-    #            [0, 0, 8, 0, 0, 0, 0, 4, 0]]
-    # testBoard = sudokuBoard(boardList=myBoard)
+    # Load board from list example
+    myBoard = [[5, 3, 0, 0, 7, 0, 0, 0, 0],
+               [6, 0, 0, 1, 9, 5, 0, 0, 0],
+               [0, 9, 8, 0, 0, 0, 0, 6, 0],
+               [8, 0, 0, 0, 6, 0, 0, 0, 3],
+               [4, 0, 0, 8, 0, 3, 0, 0, 1],
+               [7, 0, 0, 0, 2, 0, 0, 0, 6],
+               [0, 6, 0, 0, 0, 0, 2, 8, 0],
+               [0, 0, 0, 4, 1, 9, 0, 0, 5],
+               [0, 0, 0, 0, 8, 0, 0, 7, 9]]
+    testBoard = sudokuBoard(boardList=myBoard)
 
     # Load default board example
     # testBoard = sudokuBoard()
 
-    # Load board from csv example
-    import os
-    dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, '../Boards/CSV/testBoard.csv')
-    testBoard = sudokuBoard(boardCSV=filename)
+    # # Load board from csv example
+    # import os
+    # dirname = os.path.dirname(__file__)
+    # filename = os.path.join(dirname, '../Boards/CSV/testBoard.csv')
+    # testBoard = sudokuBoard(boardCSV=filename)
 
     testBoard.print()
 
-    # Main game loop
-    while(any(0 in row for row in testBoard.board)):
-        x = int(input('X coordinate: '))
-        y = int(input('Y coordinate: '))
-        number = int(input('Number to insert: '))
-        testBoard.insertNumber(x, y, number)
-        testBoard.print()
+    testBoard.solve()
+    testBoard.print()
+
+    # # Main game loop
+    # while(any(0 in row for row in testBoard.board)):
+    #     x = int(input('X coordinate: '))
+    #     y = int(input('Y coordinate: '))
+    #     number = int(input('Number to insert: '))
+    #     testBoard.insertNumber(x, y, number)
+    #     testBoard.print()
 
     print("You win!!!")
