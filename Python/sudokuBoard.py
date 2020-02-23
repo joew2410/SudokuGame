@@ -149,6 +149,7 @@ class sudokuBoard:
         """
 
         self.board = copy.deepcopy(self.startBoard)
+        self.moveHistory = []
 
     def undoMove(self):
         """
