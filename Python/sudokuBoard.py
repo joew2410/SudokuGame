@@ -8,6 +8,7 @@
 """
 
 import copy
+import csv
 
 
 class sudokuBoard:
@@ -26,16 +27,27 @@ class sudokuBoard:
                 None
         """
 
-        # Default board
-        self.startBoard = [[0, 8, 0, 0, 0, 0, 2, 0, 0],
-                           [0, 0, 0, 0, 8, 4, 0, 9, 0],
-                           [0, 0, 6, 3, 2, 0, 0, 1, 0],
-                           [0, 9, 7, 0, 0, 0, 0, 8, 0],
-                           [8, 0, 0, 9, 0, 3, 0, 0, 2],
-                           [0, 1, 0, 0, 0, 0, 9, 5, 0],
-                           [0, 7, 0, 0, 4, 5, 8, 0, 0],
-                           [0, 3, 0, 7, 1, 0, 0, 0, 0],
-                           [0, 0, 8, 0, 0, 0, 0, 4, 0]]
+        boardList = kwargs.get('boardList', [])
+        boardCSV = kwargs.get('boardCSV', '')
+
+        if(boardList != []):
+            self.startBoard = copy.deepcopy(boardList)
+        elif(boardCSV != ''):
+            with open(boardCSV) as f:
+                reader = csv.reader(f)
+                board = [list(map(int, i)) for i in list(reader)]
+                self.startBoard = copy.deepcopy(board)
+        else:
+            # Default board
+            self.startBoard = [[0, 8, 0, 0, 0, 0, 2, 0, 0],
+                               [0, 0, 0, 0, 8, 4, 0, 9, 0],
+                               [0, 0, 6, 3, 2, 0, 0, 1, 0],
+                               [0, 9, 7, 0, 0, 0, 0, 8, 0],
+                               [8, 0, 0, 9, 0, 3, 0, 0, 2],
+                               [0, 1, 0, 0, 0, 0, 9, 5, 0],
+                               [0, 7, 0, 0, 4, 5, 8, 0, 0],
+                               [0, 3, 0, 7, 1, 0, 0, 0, 0],
+                               [0, 0, 8, 0, 0, 0, 0, 4, 0]]
 
         self.board = copy.deepcopy(self.startBoard)
 
@@ -171,7 +183,27 @@ class sudokuBoard:
 
 
 if __name__ == "__main__":
-    testBoard = sudokuBoard()
+
+    # # Load board from list example
+    # myBoard = [[0, 8, 0, 0, 0, 0, 2, 0, 0],
+    #            [0, 0, 0, 0, 8, 4, 0, 9, 0],
+    #            [0, 0, 6, 3, 2, 0, 0, 1, 0],
+    #            [0, 9, 7, 0, 0, 0, 0, 8, 0],
+    #            [8, 0, 0, 9, 0, 3, 0, 0, 2],
+    #            [0, 1, 0, 0, 0, 0, 9, 5, 0],
+    #            [0, 7, 0, 0, 4, 5, 8, 0, 0],
+    #            [0, 3, 0, 7, 1, 0, 0, 0, 0],
+    #            [0, 0, 8, 0, 0, 0, 0, 4, 0]]
+    # testBoard = sudokuBoard(boardList=myBoard)
+
+    # Load default board example
+    # testBoard = sudokuBoard()
+
+    # Load board from csv example
+    import os
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, '../Boards/CSV/testBoard.csv')
+    testBoard = sudokuBoard(boardCSV=filename)
 
     testBoard.print()
 
