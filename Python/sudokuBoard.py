@@ -39,6 +39,8 @@ class sudokuBoard:
 
         self.board = copy.deepcopy(self.startBoard)
 
+        self.moveHistory = []
+
         return
 
     def print(self):
@@ -85,6 +87,9 @@ class sudokuBoard:
 
         # check the move is valid
         if self.checkValid(x, y, number):
+
+            # record the move in move history
+            self.moveHistory.append([x, y, self.board[y][x], number])
 
             # Insert the value into the grid
             self.board[y][x] = number
@@ -144,6 +149,24 @@ class sudokuBoard:
         """
 
         self.board = copy.deepcopy(self.startBoard)
+
+    def undoMove(self):
+        """
+        Method to undo the last move made
+        """
+
+        if(self.moveHistory != []):
+
+            # revert previous move
+            x, y, prevVal, newVal = self.moveHistory[-1]
+            self.board[y][x] = prevVal
+
+            # remove move from move history
+            self.moveHistory = self.moveHistory[0:-1]
+
+            return True
+
+        return False    # indicate that there are no moves in the history
 
 
 if __name__ == "__main__":
